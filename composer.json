@@ -1,0 +1,18 @@
+{
+    "name": "mahdy/framework",
+    "description": "Own Framework",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mohamed Mahdy",
+            "email": "oracle.dev10g@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/http-foundation": "^4.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.4"
+    }
+}
