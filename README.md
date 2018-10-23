@@ -16,3 +16,6 @@ now u can call page like :
 after using Symfony\Routing and adding $routes in app.php we can now call page like this:
 `http://127.0.0.1:4321/hello/Mahdy`
 `http://127.0.0.1:4321/bye`
+
+after updating composer.json file to autoload src/ you must run this:
+`composer dump-autoload`
