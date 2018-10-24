@@ -16,8 +16,10 @@ $context = new Routing\RequestContext();
 $matcher = new Routing\Matcher\UrlMatcher($routes, $context);
 
 $dispatcher = new EventDispatcher();
-$dispatcher->addListener('response', array(new Simplex\GoogleListener(), 'onResponse'));
-$dispatcher->addListener('response', array(new Simplex\ContentLengthListener(), 'onResponse'), -255);
+//$dispatcher->addListener('response', array(new Simplex\GoogleListener(), 'onResponse'));
+$dispatcher->addSubscriber(new Simplex\GoogleListener());
+//$dispatcher->addListener('response', array(new Simplex\ContentLengthListener(), 'onResponse'), -255);
+$dispatcher->addSubscriber(new Simplex\ContentLengthListener());
 
 function render_template(Request $request)
 {
