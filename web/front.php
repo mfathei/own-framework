@@ -3,28 +3,10 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing;
-use Symfony\Component\HttpKernel;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver;
-use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 $request = Request::createFromGlobals();
-$requestStack = new RequestStack();
 $routes = include __DIR__ . '/../src/app.php';
-
-$context = new Routing\RequestContext();
-$matcher = new Routing\Matcher\UrlMatcher($routes, $context);
-
-$dispatcher = new EventDispatcher();
-$dispatcher->addSubscriber(new HttpKernel\EventListener\ExceptionListener('Calendar\Controller\ErrorController::exception'));
-$dispatcher->addSubscriber(new HttpKernel\EventListener\RouterListener($matcher, $requestStack));
-//$dispatcher->addListener('response', array(new Simplex\GoogleListener(), 'onResponse'));
-//$dispatcher->addSubscriber(new Simplex\GoogleListener());
-//$dispatcher->addListener('response', array(new Simplex\ContentLengthListener(), 'onResponse'), -255);
-//$dispatcher->addSubscriber(new Simplex\ContentLengthListener());
+$container = include __DIR__ . '/../src/container.php';
 
 function render_template(Request $request)
 {
@@ -36,15 +18,7 @@ function render_template(Request $request)
     return new Response(ob_get_clean());
 }
 
-
-$controllerResolver = new ControllerResolver();
-$argumentResolver = new ArgumentResolver();
-
-$framework = new Simplex\Framework($dispatcher, $matcher, $controllerResolver, $requestStack, $argumentResolver);
-$framework = new HttpKernel\HttpCache\HttpCache(
-    $framework,
-    new HttpKernel\HttpCache\Store(__DIR__ . '/../cache')
-);
-$response = $framework->handle($request);
+$container->setParameter('routes', $routes);
+$response = $container->get('framework')->handle($request);
 
 $response->send();
